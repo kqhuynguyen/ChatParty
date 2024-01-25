@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ChatParty.Data;
 using ChatParty.Models;
 using Microsoft.AspNetCore.Identity;
+using ChatParty.Areas.Identity.Data;
 
 namespace ChatParty.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly ChatPartyContext _context;
+        private readonly ChatPartyAuthContext _context;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
-        public UsersController(ChatPartyContext context)
+        public UsersController(ChatPartyAuthContext context)
         {
             _context = context;
         }
@@ -36,16 +36,16 @@ namespace ChatParty.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignIn([Bind("Name,Password")] User user)
+        public async Task<IActionResult> SignIn([Bind("UserName,Password")] User user)
         {
-            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Password))
+            if (string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.PasswordHash))
             {
                 return StatusCode(400);
             }
             using (_context)
             {
-                var hashedPassword = _context.User.Single(u => u.Name.Trim() == user.Name.Trim()).Password;
-                if (_passwordHasher.VerifyHashedPassword(null, hashedPassword, user.Password) == PasswordVerificationResult.Success)
+                var hashedPassword = _context.User.Single(u => u.UserName.Trim() == user.UserName.Trim()).PasswordHash;
+                if (_passwordHasher.VerifyHashedPassword(new Models.User(), hashedPassword, user.PasswordHash) == PasswordVerificationResult.Success)
                 {
                     return Ok("Sign in successful");
                 }
@@ -82,7 +82,7 @@ namespace ChatParty.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CreatedDate,BirthDate,Status")] User user)
+        public async Task<IActionResult> Create([Bind("Id,UserName,CreatedDate,BirthDate,Status")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -114,7 +114,7 @@ namespace ChatParty.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedDate,BirthDate,Status")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,CreatedDate,BirthDate,Status")] User user)
         {
             if (id != user.Id)
             {

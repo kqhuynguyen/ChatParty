@@ -7,6 +7,10 @@
       "secretStore": "LocalSecretsFile",
       "type": "sqlite.local",
       "connectionId": "ConnectionStrings:ChatPartyContextSQLite"
+    },
+    "mssql1": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:ChatPartyAuthContextConnection"
     }
   }
 }

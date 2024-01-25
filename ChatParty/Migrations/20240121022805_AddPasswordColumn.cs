@@ -9,7 +9,7 @@ namespace ChatParty.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Name",
+                name: "UserName",
                 table: "User",
                 type: "TEXT",
                 nullable: false,
@@ -33,7 +33,7 @@ namespace ChatParty.Migrations
                 table: "User");
 
             migrationBuilder.AlterColumn<string>(
-                name: "Name",
+                name: "UserName",
                 table: "User",
                 type: "TEXT",
                 nullable: true,

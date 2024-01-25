@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ChatParty.Models;
 
-namespace ChatParty.Data
+namespace ChatParty.Data;
+
+public class ChatPartyContext : DbContext
 {
-    public class ChatPartyContext : DbContext
+    public ChatPartyContext(DbContextOptions<ChatPartyContext> options)
+        : base(options)
     {
-        public ChatPartyContext (DbContextOptions<ChatPartyContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<ChatParty.Models.User> User { get; set; } = default!;
     }
+    public DbSet<Models.User> User { get; set; } = default!;
+
 }
