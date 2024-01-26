@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ChatParty.Models;
 using Microsoft.AspNetCore.Identity;
 using ChatParty.Areas.Identity.Data;
+using ChatParty.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ChatPartyAuthContext>(options =>
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<ChatPartyAuthContext>(options =>
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ChatPartyAuthContext>();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
 
@@ -67,6 +70,7 @@ app.UseRouting();
 
 app.UseAuthentication();;
 app.UseAuthorization();
+app.MapHub<ChatHub>("/chatHub");
 
 app.MapControllerRoute(
     name: "default",
