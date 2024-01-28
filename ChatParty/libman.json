@@ -9,6 +9,10 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
       ]
+    },
+    {
+      "library": "@microsoft/signalr@8.0.0",
+      "destination": "wwwroot/js/signalr/dist/browser/"
     }
   ]
 }

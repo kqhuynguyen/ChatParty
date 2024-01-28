@@ -1,17 +1,27 @@
 ﻿"use strict";
-
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
-
 connection.on("ReceiveMessage", function (user, message) {
-    var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you 
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
+
+    const template = document.createElement('template');
+
+    template.innerHTML = `<div class="flex flex-row">
+		<div class="text-blue-300 text-xs mr-4 shrink-0 flex-grow-0 basis-15">User 1:</div>
+		<div class="text-balance text-black-50 text-sm">Lorem ipsum donor salova.</div>
+	</div>`
+
+    const div = template.content.cloneNode(true).children[0];
+    div.children[0].textContent = `Guest:`;
+    div.children[1].textContent = message;
+    if (div) {
+        document.getElementById("messagesList").appendChild(div);
+        document.getElementById("messageInput").value = "";
+        // We can assign user-supplied strings to an element's textContent because it
+        // is not interpreted as markup. If you're assigning in any other way, you
+        // should be aware of possible script injection concerns.
+    }
 });
 
 connection.start().then(function () {
@@ -20,11 +30,25 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
+
+function onSendButtonclick(event) {
+    var user = "Guest";
     var message = document.getElementById("messageInput").value;
     connection.invoke("SendMessage", user, message).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
-});
+}
+
+function onEnter(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("sendButton").click();
+    }
+}
+
+document.getElementById("messageInput")
+    .addEventListener("keyup", onEnter);
+document.getElementById("sendButton")
+    .addEventListener("click", onSendButtonclick);
+

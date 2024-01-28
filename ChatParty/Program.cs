@@ -4,6 +4,8 @@ using ChatParty.Models;
 using Microsoft.AspNetCore.Identity;
 using ChatParty.Areas.Identity.Data;
 using ChatParty.Hubs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ChatPartyAuthContext>(options =>
@@ -12,11 +14,19 @@ builder.Services.AddDbContext<ChatPartyAuthContext>(options =>
         ));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ChatPartyAuthContext>();
 
 builder.Services.AddSignalR();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

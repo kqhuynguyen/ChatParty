@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ChatParty.Models;
 using Microsoft.AspNetCore.Identity;
 using ChatParty.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChatParty.Controllers
 {
@@ -29,14 +30,22 @@ namespace ChatParty.Controllers
                           Problem("Entity set 'ChatPartyContext.User'  is null.");
         }
 
-        public IActionResult SignIn()
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignIn([Bind("UserName,Password")] User user)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([Bind("UserName,Password")] User user)
         {
             if (string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.PasswordHash))
             {
