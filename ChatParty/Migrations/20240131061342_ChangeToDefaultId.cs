@@ -4,7 +4,7 @@
 
 namespace ChatParty.Migrations
 {
-    public partial class Initialize : Migration
+    public partial class ChangeToDefaultId : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -2,24 +2,32 @@
 using ChatParty.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-
+using ChatParty.Areas.Identity.Data;
+using SQLitePCL;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ChatPartyAuthContext _context;
         private readonly ILogger<HomeController> _logger;
 
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ChatPartyAuthContext context, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
         [AllowAnonymous]
         public IActionResult Index()
         {
-            return View();
+            var homeMessages = _context.Message
+                .Include(message => message.User)
+                .OrderBy(message => message.Created)
+                .ToList();
+            return View(homeMessages.ToList());
         }
 
         [AllowAnonymous]

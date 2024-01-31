@@ -1,5 +1,8 @@
 ﻿"use strict";
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+var connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chatHub")
+    .configureLogging(signalR.LogLevel.Debug)
+    .build();
 
 //Disable the send button until connection is established.
 document.getElementById("sendButton").disabled = true;
@@ -26,15 +29,15 @@ connection.on("ReceiveMessage", function (user, message) {
 
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
+    console.log('we are so back');
 }).catch(function (err) {
     return console.error(err.toString());
 });
 
 
 function onSendButtonclick(event) {
-    var user = "Guest";
     var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
+    connection.invoke("SendMessage",  message).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

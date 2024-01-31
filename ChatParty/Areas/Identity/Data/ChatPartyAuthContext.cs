@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Reflection.Metadata;
+using ChatParty.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,5 +13,7 @@ public class ChatPartyAuthContext : IdentityDbContext
     {
     }
     public DbSet<Models.User> User { get; set; } = default!;
+    public DbSet<Models.Message> Message { get; set; } = default!;
+    public DbSet<Models.MessageGroup> MessageGroup { get; set; } = default!;
 
 }

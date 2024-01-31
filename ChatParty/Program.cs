@@ -13,7 +13,7 @@ builder.Services.AddDbContext<ChatPartyAuthContext>(options =>
         builder.Configuration.GetConnectionString("ChatPartyAuthContext") ?? throw new InvalidOperationException("Connection string 'ChatPartyContext' not found.")
         ));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ChatPartyAuthContext>();
 
@@ -26,7 +26,6 @@ builder.Services.AddAuthorization(options =>
         .RequireAuthenticatedUser()
         .Build();
 });
-
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -57,8 +56,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
-
-
 
 using (var scope = app.Services.CreateScope())
 {
