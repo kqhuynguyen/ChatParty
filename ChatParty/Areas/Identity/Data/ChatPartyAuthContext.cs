@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Areas.Identity.Data;
 
-public class ChatPartyAuthContext : IdentityDbContext
+public class ChatPartyAuthContext : IdentityDbContext<User>
 {
     public ChatPartyAuthContext(DbContextOptions<ChatPartyAuthContext> options)
         : base(options)

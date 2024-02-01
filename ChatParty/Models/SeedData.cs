@@ -11,7 +11,13 @@ namespace ChatParty.Models;
 
 public static class SeedData
 {
+    private static readonly PasswordHasher<User> hasher = new PasswordHasher<User>();
 
+    private static User createUserPassword(User user, string password)
+    {
+        user.PasswordHash = hasher.HashPassword(user, password);
+        return user;
+    }
 
     public static void Initialize(IServiceProvider serviceProvider)
     {
@@ -19,7 +25,7 @@ public static class SeedData
             serviceProvider.GetRequiredService<
                 DbContextOptions<ChatPartyAuthContext>>()))
         {
-            var hasher = new PasswordHasher<User>();
+
 
 
             // Look for any movies.
@@ -31,47 +37,44 @@ public static class SeedData
             var exampleUserId1 = Guid.NewGuid().ToString();
             var exampleUserId2 = Guid.NewGuid().ToString();
 
+
             context.User.AddRange(
-                new User
+                createUserPassword(new User
                 {
                     Id = exampleUserId1,
                     UserName = "Jackson Steward",
                     Email="jackson@gmail.com",
-                    PasswordHash = hasher.HashPassword(new User(), "abc123456890"),
                     CreatedDate= DateTime.Parse("2023-1-1"),
                     BirthDate = DateTime.Parse("1960-1-1"),
                     Status = 1
-                },
-                new User
+                }, "abc123456890"),
+                createUserPassword(new User
                 {
                     Id = exampleUserId2,
                     UserName = "Yukino Spielberg",
                     Email = "yukino@gmail.com",
-                    PasswordHash = hasher.HashPassword(new User(), "abc123456890"),
                     CreatedDate = DateTime.Parse("2023-9-12"),
                     BirthDate = DateTime.Parse("2001-4-30"),
                     Status = 1
-                },
-                new User
+                }, "abc123456890"),
+                createUserPassword(new User
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = "Christopher Lennon",
                     Email = "chris@gmail.com",
-                    PasswordHash = hasher.HashPassword(new User(), "abc123456890"),
                     CreatedDate = DateTime.Parse("2024-1-8"),
                     BirthDate = DateTime.Parse("2005-12-16"),
                     Status = 0
-                },
-                new User
+                }, "abc123456890"),
+                createUserPassword(new User
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = "Eric Turk",
                     Email = "eric@gmail.com",
-                    PasswordHash = hasher.HashPassword(new User(), "abc123456890"),
                     CreatedDate = DateTime.Parse("2001-5-8"),
                     BirthDate = DateTime.Parse("1998-9-23"),
                     Status = 1
-                }
+                }, "abc123456890")
             );
 
             context.MessageGroup.AddRange(
