@@ -16,7 +16,7 @@ connection.on("ReceiveMessage", function (user, message) {
 	</div>`
 
     const div = template.content.cloneNode(true).children[0];
-    div.children[0].textContent = `Guest:`;
+    div.children[0].textContent = `${user}:`;
     div.children[1].textContent = message;
     if (div) {
         document.getElementById("messagesList").appendChild(div);
@@ -29,7 +29,6 @@ connection.on("ReceiveMessage", function (user, message) {
 
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
-    console.log('we are so back');
 }).catch(function (err) {
     return console.error(err.toString());
 });

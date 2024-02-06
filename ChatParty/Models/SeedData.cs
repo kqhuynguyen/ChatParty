@@ -13,13 +13,7 @@ public static class SeedData
 {
     private static readonly PasswordHasher<User> hasher = new PasswordHasher<User>();
 
-    private static User createUserPassword(User user, string password)
-    {
-        user.PasswordHash = hasher.HashPassword(user, password);
-        return user;
-    }
-
-    public static void Initialize(IServiceProvider serviceProvider)
+    public async static Task Initialize(IServiceProvider serviceProvider)
     {
         using (var context = new ChatPartyAuthContext(
             serviceProvider.GetRequiredService<
@@ -27,7 +21,7 @@ public static class SeedData
         {
 
 
-
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             // Look for any movies.
             if (context.User.Any() || context.User.Any() || context.MessageGroup.Any())
             {
@@ -37,45 +31,45 @@ public static class SeedData
             var exampleUserId1 = Guid.NewGuid().ToString();
             var exampleUserId2 = Guid.NewGuid().ToString();
 
-
-            context.User.AddRange(
-                createUserPassword(new User
-                {
-                    Id = exampleUserId1,
-                    UserName = "Jackson Steward",
-                    Email="jackson@gmail.com",
-                    CreatedDate= DateTime.Parse("2023-1-1"),
-                    BirthDate = DateTime.Parse("1960-1-1"),
-                    Status = 1
-                }, "abc123456890"),
-                createUserPassword(new User
-                {
-                    Id = exampleUserId2,
-                    UserName = "Yukino Spielberg",
-                    Email = "yukino@gmail.com",
-                    CreatedDate = DateTime.Parse("2023-9-12"),
-                    BirthDate = DateTime.Parse("2001-4-30"),
-                    Status = 1
-                }, "abc123456890"),
-                createUserPassword(new User
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    UserName = "Christopher Lennon",
-                    Email = "chris@gmail.com",
-                    CreatedDate = DateTime.Parse("2024-1-8"),
-                    BirthDate = DateTime.Parse("2005-12-16"),
-                    Status = 0
-                }, "abc123456890"),
-                createUserPassword(new User
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    UserName = "Eric Turk",
-                    Email = "eric@gmail.com",
-                    CreatedDate = DateTime.Parse("2001-5-8"),
-                    BirthDate = DateTime.Parse("1998-9-23"),
-                    Status = 1
-                }, "abc123456890")
-            );
+            var result = await userManager.CreateAsync(new User
+            {
+                Id = exampleUserId1,
+                UserName = "JacksonSteward",
+                Email = "jackson@gmail.com",
+                CreatedDate = DateTime.Parse("2023-1-1"),
+                EmailConfirmed=true,
+                BirthDate = DateTime.Parse("1960-1-1"),
+                Status = 1
+            }, "abc123456890");
+            await userManager.CreateAsync(new User {
+                Id = exampleUserId2,
+                UserName = "YukinoSpielberg",
+                Email = "yukino@gmail.com",
+                CreatedDate = DateTime.Parse("2023-9-12"),
+                EmailConfirmed=true,
+                BirthDate = DateTime.Parse("2001-4-30"),
+                Status = 1
+            }, "abc123456890");
+            await userManager.CreateAsync(new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = "ChristopherLennon",
+                Email = "chris@gmail.com",
+                CreatedDate = DateTime.Parse("2024-1-8"),
+                EmailConfirmed = true,
+                BirthDate = DateTime.Parse("2005-12-16"),
+                Status = 0
+            }, "abc123456890");
+            await userManager.CreateAsync(new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = "EricTurk",
+                Email = "eric@gmail.com",
+                CreatedDate = DateTime.Parse("2001-5-8"),
+                EmailConfirmed = true,
+                BirthDate = DateTime.Parse("1998-9-23"),
+                Status = 1
+            }, "abc123456890");
 
             context.MessageGroup.AddRange(
                 new MessageGroup

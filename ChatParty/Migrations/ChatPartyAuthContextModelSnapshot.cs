@@ -25,6 +25,7 @@ namespace ChatParty.Migrations
             modelBuilder.Entity("ChatParty.Models.Message", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
@@ -57,6 +58,7 @@ namespace ChatParty.Migrations
             modelBuilder.Entity("ChatParty.Models.MessageGroup", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");

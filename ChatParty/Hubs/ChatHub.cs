@@ -22,8 +22,8 @@ namespace ChatParty.Hubs
 
         public async Task SendMessage(string message)
         {
-            var user = await _userManager.GetUserAsync(Context.User);
             var nameOfSender = "Guest";
+            var user = await _userManager.GetUserAsync(Context.User);
             if (user != null)
             {
                 var messageObject = new Message
@@ -32,6 +32,7 @@ namespace ChatParty.Hubs
                     Content = message,
                     MessageGroupId = Constants.PublicMessageGroupId,
                 };
+                nameOfSender = user.UserName;
                 _authContext.Add(messageObject);
                 _authContext.SaveChanges();
             } 

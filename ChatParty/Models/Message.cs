@@ -5,7 +5,8 @@ using System.Runtime.CompilerServices;
 namespace ChatParty.Models
 {
     public class Message
-    { 
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
         public string UserId { get; set; }
         public string MessageGroupId { get; set; }

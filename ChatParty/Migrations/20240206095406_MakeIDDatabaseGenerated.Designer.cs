@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatParty.Migrations
 {
     [DbContext(typeof(ChatPartyAuthContext))]
-    [Migration("20240201010236_IdentityFix")]
-    partial class IdentityFix
+    [Migration("20240206095406_MakeIDDatabaseGenerated")]
+    partial class MakeIDDatabaseGenerated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,7 @@ namespace ChatParty.Migrations
             modelBuilder.Entity("ChatParty.Models.Message", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
@@ -59,6 +60,7 @@ namespace ChatParty.Migrations
             modelBuilder.Entity("ChatParty.Models.MessageGroup", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
