@@ -1,6 +1,5 @@
 ﻿
 using ChatParty.Areas.Identity.Data;
-using ChatParty.Data;
 using ChatParty.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace ChatParty.Hubs
 {
     [AllowAnonymous]
-    public class ChatHub: Hub
+    public class ChatHub : Hub
     {
         private readonly ChatPartyAuthContext _authContext;
         private readonly UserManager<User> _userManager;
@@ -19,8 +18,11 @@ namespace ChatParty.Hubs
             _authContext = authContext;
             _userManager = userManager;
         }
-
-        public async Task SendMessage(string message)
+        public async Task AddToGroup(string groupId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
+        }
+        public async Task SendMessage(string message, string groupId)
         {
             var nameOfSender = "Guest";
             var user = await _userManager.GetUserAsync(Context.User);
@@ -30,14 +32,14 @@ namespace ChatParty.Hubs
                 {
                     UserId = user.Id,
                     Content = message,
-                    MessageGroupId = Constants.PublicMessageGroupId,
+                    MessageGroupId = groupId,
                 };
                 nameOfSender = user.UserName;
                 _authContext.Add(messageObject);
                 _authContext.SaveChanges();
-            } 
+            }
 
-            await Clients.All.SendAsync("ReceiveMessage", nameOfSender, message);
+            await Clients.Group(groupId).SendAsync("ReceiveMessage", nameOfSender, message);
         }
     }
 }

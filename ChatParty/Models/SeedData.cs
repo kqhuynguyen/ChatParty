@@ -1,11 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using ChatParty.Models;
-using System;
-using System.Linq;
-using Microsoft.AspNetCore.Identity;
-using ChatParty.Areas.Identity.Data;
+﻿using ChatParty.Areas.Identity.Data;
 using ChatParty.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Models;
 
@@ -37,16 +33,17 @@ public static class SeedData
                 UserName = "JacksonSteward",
                 Email = "jackson@gmail.com",
                 CreatedDate = DateTime.Parse("2023-1-1"),
-                EmailConfirmed=true,
+                EmailConfirmed = true,
                 BirthDate = DateTime.Parse("1960-1-1"),
                 Status = 1
             }, "abc123456890");
-            await userManager.CreateAsync(new User {
+            await userManager.CreateAsync(new User
+            {
                 Id = exampleUserId2,
                 UserName = "YukinoSpielberg",
                 Email = "yukino@gmail.com",
                 CreatedDate = DateTime.Parse("2023-9-12"),
-                EmailConfirmed=true,
+                EmailConfirmed = true,
                 BirthDate = DateTime.Parse("2001-4-30"),
                 Status = 1
             }, "abc123456890");

@@ -21,12 +21,16 @@ namespace ChatParty.Controllers
             {
                 return NotFound();
             }
-            var messageGroup = await _context.MessageGroup.Include(mg => mg.Messages).ThenInclude(m => m.User).Where(mg => mg.Id == id).FirstOrDefaultAsync();
+            var messageGroup = await _context.MessageGroup.Include(
+                    mg => mg.Messages.OrderBy(m => m.Created)
+                ).ThenInclude(m => m.User)
+                .Where(mg => mg.Id == id)
+                .FirstOrDefaultAsync();
             if (messageGroup == null)
             {
                 return NotFound();
             }
-            return View(messageGroup.Messages);
+            return View(messageGroup);
         }
     }
 }

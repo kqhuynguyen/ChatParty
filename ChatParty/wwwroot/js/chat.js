@@ -29,6 +29,8 @@ connection.on("ReceiveMessage", function (user, message) {
 
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
+    var groupId = document.getElementById("messageGroupId").innerText;
+    return connection.invoke("addToGroup", groupId);
 }).catch(function (err) {
     return console.error(err.toString());
 });
@@ -36,7 +38,8 @@ connection.start().then(function () {
 
 function onSendButtonclick(event) {
     var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage",  message).catch(function (err) {
+    var groupId = document.getElementById("messageGroupId").innerText;
+    connection.invoke("SendMessage", message, groupId).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

@@ -1,11 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using ChatParty.Models;
-using Microsoft.AspNetCore.Identity;
 using ChatParty.Areas.Identity.Data;
 using ChatParty.Hubs;
+using ChatParty.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ChatPartyAuthContext>(options =>
@@ -75,7 +73,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();;
+app.UseAuthentication(); ;
 app.UseAuthorization();
 app.MapHub<ChatHub>("/chatHub");
 

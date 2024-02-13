@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
-using ChatParty.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using ChatParty.Areas.Identity.Data;
-using SQLitePCL;
+using ChatParty.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Controllers
@@ -24,12 +23,12 @@ namespace ChatParty.Controllers
         public async Task<IActionResult> All()
         {
             var messageGroups = await _context.MessageGroup
+                .OrderByDescending(mg => mg.Messages.OrderByDescending(m=>m.Created).First().Created)
                 .Include(mg => mg.Messages.OrderByDescending(m => m.Created).Take(1))
                 .ThenInclude(m => m.User)
                 .Take(10)
-                .OrderByDescending(mg => mg.Messages.First().Created)
                 .ToListAsync();
-            
+
             return View(messageGroups);
         }
 
