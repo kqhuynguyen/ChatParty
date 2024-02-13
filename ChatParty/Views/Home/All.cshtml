@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ChatParty.Models.MessageGroup>
+@{
+    ViewData["Title"] = "All";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>   
+    <div class="text-neutral-200 p-2 border-2 bg-zinc-800 rounded-md border-zinc-50 flex flex-column mt-2 mb-2 hover:bg-zinc-700 hover:cursor-pointer">
+        <div class="p-1 flex -space-x-1 overflow-hidden mb-1">
+            <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80" alt="">
+            <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-white " src="~/Images/ellipsis.svg" alt="">
+        </div>
+        <h3>Group Chat 1</h3>
+        <div>Dave: Okay here we go</div>
+    </div>
+    @foreach (var messageGroup in Model)
+    {
+        <div class="text-neutral-200 p-2 border-2 bg-zinc-800 rounded-md border-zinc-50 flex flex-column mt-2 mb-2 hover:bg-zinc-700 hover:cursor-pointer">
+            <div class="p-1 flex -space-x-1 overflow-hidden mb-1">
+                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80" alt="">
+                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-white " src="~/Images/ellipsis.svg" alt="">
+            </div>
+            <h3>@messageGroup.Name</h3>
+            <div>@messageGroup.Messages.First().User.UserName: @messageGroup.Messages.First().Content</div>
+        </div>
+    }
+</div>

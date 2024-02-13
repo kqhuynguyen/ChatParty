@@ -21,17 +21,32 @@ namespace ChatParty.Controllers
         }
 
         [AllowAnonymous]
+        public IActionResult All()
+        {
+            var messageGroups = _context.MessageGroup
+                .Include(mg => mg.Messages.OrderByDescending(m => m.Created).Take(1))
+                .ThenInclude(m => m.User)
+                .Take(10)
+                .OrderBy(mg => mg.Messages.FirstOrDefault() == null)
+                .OrderByDescending(mg => mg.Messages.FirstOrDefault().Created)
+                .ToList();
+            
+            return View(messageGroups);
+        }
+
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var homeMessages = _context.Message
                 .Include(message => message.User)
                 .OrderBy(message => message.Created)
                 .ToList();
-            return View(homeMessages.ToList());
+            return View(homeMessages);
         }
 
         [AllowAnonymous]
         public IActionResult Privacy()
+
         {
             return View();
         }
