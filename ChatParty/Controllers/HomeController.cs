@@ -27,8 +27,7 @@ namespace ChatParty.Controllers
                 .Include(mg => mg.Messages.OrderByDescending(m => m.Created).Take(1))
                 .ThenInclude(m => m.User)
                 .Take(10)
-                .OrderBy(mg => mg.Messages.FirstOrDefault() == null)
-                .OrderByDescending(mg => mg.Messages.FirstOrDefault().Created)
+                .OrderByDescending(mg => mg.Messages.First().Created)
                 .ToList();
             
             return View(messageGroups);

@@ -27,7 +27,12 @@
                 <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-white " src="~/Images/ellipsis.svg" alt="">
             </div>
             <h3>@messageGroup.Name</h3>
-            <div>@messageGroup.Messages.First().User.UserName: @messageGroup.Messages.First().Content</div>
+            @{var firstMessage = messageGroup.Messages.FirstOrDefault();}
+            @if (firstMessage == null) {
+                <div class="italic">No messages</div>
+            } else {
+                <div>@firstMessage.User.UserName: @firstMessage.Content</div>
+            }
         </div>
     }
 </div>
