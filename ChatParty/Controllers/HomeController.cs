@@ -35,11 +35,7 @@ namespace ChatParty.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var homeMessages = await _context.Message
-                .Include(message => message.User)
-                .OrderBy(message => message.Created)
-                .ToListAsync();
-            return View(homeMessages);
+            return Redirect("/Home/All");
         }
 
         [AllowAnonymous]

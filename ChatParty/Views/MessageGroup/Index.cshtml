@@ -5,13 +5,13 @@
 	<div class="overflow-hidden ml-3 flex flex-col justify-content-start" id="messagesList">
 		<div class="flex flex-row">
 			<div class="text-blue-300 text-xs mr-4 shrink-0 flex-grow-0 basis-15">User 2:</div>
-			<div class="text-balance  text-black-50 text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id diam nibh. Donec eget eros velit. Proin ac facilisis purus. Vivamus quam urna, maximus id pretium eget, efficitur eget eros. </div>
+			<div class="text-balance  text-white-50 text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id diam nibh. Donec eget eros velit. Proin ac facilisis purus. Vivamus quam urna, maximus id pretium eget, efficitur eget eros. </div>
 		</div>
 		@foreach (var message in Model.Messages)
 		{
 		<div class="flex flex-row">
 			<div class="text-blue-300 text-xs mr-4 shrink-0 flex-grow-0 basis-15">@message.User.UserName:</div>
-			<div class="text-balance  text-black-50 text-sm">@message.Content</div>
+			<div class="text-balance  text-white-50 text-sm">@message.Content</div>
 		</div>
 		}
 	</div>
