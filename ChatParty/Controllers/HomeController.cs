@@ -21,25 +21,25 @@ namespace ChatParty.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult All()
+        public async Task<IActionResult> All()
         {
-            var messageGroups = _context.MessageGroup
+            var messageGroups = await _context.MessageGroup
                 .Include(mg => mg.Messages.OrderByDescending(m => m.Created).Take(1))
                 .ThenInclude(m => m.User)
                 .Take(10)
                 .OrderByDescending(mg => mg.Messages.First().Created)
-                .ToList();
+                .ToListAsync();
             
             return View(messageGroups);
         }
 
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var homeMessages = _context.Message
+            var homeMessages = await _context.Message
                 .Include(message => message.User)
                 .OrderBy(message => message.Created)
-                .ToList();
+                .ToListAsync();
             return View(homeMessages);
         }
 
