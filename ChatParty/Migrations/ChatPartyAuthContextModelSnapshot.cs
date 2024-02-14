@@ -22,10 +22,44 @@ namespace ChatParty.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("ChatParty.Models.Message", b =>
+            modelBuilder.Entity("ChannelUser", b =>
+                {
+                    b.Property<string>("MessageGroupsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("MessageGroupsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ChannelUser");
+                });
+
+            modelBuilder.Entity("ChatParty.Models.Channel", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Channel");
+                });
+
+            modelBuilder.Entity("ChatParty.Models.GroupMessage", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ChannelId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
@@ -38,36 +72,17 @@ namespace ChatParty.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("MessageGroupId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MessageGroupId");
+                    b.HasIndex("ChannelId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Message");
-                });
-
-            modelBuilder.Entity("ChatParty.Models.MessageGroup", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MessageGroup");
+                    b.ToTable("GroupMessage");
                 });
 
             modelBuilder.Entity("ChatParty.Models.User", b =>
@@ -142,21 +157,6 @@ namespace ChatParty.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("MessageGroupUser", b =>
-                {
-                    b.Property<string>("MessageGroupsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("MessageGroupsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("MessageGroupUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -296,11 +296,26 @@ namespace ChatParty.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ChatParty.Models.Message", b =>
+            modelBuilder.Entity("ChannelUser", b =>
                 {
-                    b.HasOne("ChatParty.Models.MessageGroup", "MessageGroup")
+                    b.HasOne("ChatParty.Models.Channel", null)
+                        .WithMany()
+                        .HasForeignKey("MessageGroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ChatParty.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ChatParty.Models.GroupMessage", b =>
+                {
+                    b.HasOne("ChatParty.Models.Channel", "MessageGroup")
                         .WithMany("Messages")
-                        .HasForeignKey("MessageGroupId")
+                        .HasForeignKey("ChannelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -313,21 +328,6 @@ namespace ChatParty.Migrations
                     b.Navigation("MessageGroup");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MessageGroupUser", b =>
-                {
-                    b.HasOne("ChatParty.Models.MessageGroup", null)
-                        .WithMany()
-                        .HasForeignKey("MessageGroupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ChatParty.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -381,7 +381,7 @@ namespace ChatParty.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ChatParty.Models.MessageGroup", b =>
+            modelBuilder.Entity("ChatParty.Models.Channel", b =>
                 {
                     b.Navigation("Messages");
                 });

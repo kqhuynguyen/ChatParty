@@ -18,7 +18,7 @@ namespace ChatParty.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Search(string term)
         {
-            var suggestions = await _context.MessageGroup.Where(
+            var suggestions = await _context.Channel.Where(
                 mg => mg.Name.Contains(term)
                 ).Take(10).Select(mg => mg.Name).ToListAsync();
             suggestions.AddRange(

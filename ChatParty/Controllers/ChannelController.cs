@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Controllers
 {
-    public class MessageGroupController : Controller
+    public class ChannelController : Controller
     {
         private readonly ChatPartyAuthContext _context;
 
-        public MessageGroupController(ChatPartyAuthContext context)
+        public ChannelController(ChatPartyAuthContext context)
         {
             _context = context;
         }
@@ -17,11 +17,11 @@ namespace ChatParty.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(string? id)
         {
-            if (id == null || _context.MessageGroup == null)
+            if (id == null || _context.Channel == null)
             {
                 return NotFound();
             }
-            var messageGroup = await _context.MessageGroup.Include(
+            var messageGroup = await _context.Channel.Include(
                     mg => mg.Messages.OrderBy(m => m.Created)
                 ).ThenInclude(m => m.User)
                 .Where(mg => mg.Id == id)

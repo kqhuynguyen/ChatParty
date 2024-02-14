@@ -19,7 +19,7 @@ public static class SeedData
 
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             // Look for any movies.
-            if (context.User.Any() || context.User.Any() || context.MessageGroup.Any())
+            if (context.User.Any() || context.User.Any() || context.Channel.Any())
             {
                 return;   // DB has been seeded
             }
@@ -68,26 +68,27 @@ public static class SeedData
                 Status = 1
             }, "abc123456890");
 
-            context.MessageGroup.AddRange(
-                new MessageGroup
+            context.Channel.AddRange(
+                new Channel
                 {
-                    Id = Constants.PublicMessageGroupId
+                    Id = Constants.PublicMessageGroupId,
+                    Name = "Public Group",
                 }
             );
 
-            context.Message.AddRange(
-                new Message
+            context.GroupMessage.AddRange(
+                new GroupMessage
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserId = exampleUserId1,
-                    MessageGroupId = Constants.PublicMessageGroupId,
+                    ChannelId = Constants.PublicMessageGroupId,
                     Content = "Hello friends. Jackson's here. How are you today?",
                 },
-                new Message
+                new GroupMessage
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserId = exampleUserId2,
-                    MessageGroupId = Constants.PublicMessageGroupId,
+                    ChannelId = Constants.PublicMessageGroupId,
                     Content = "Hi Jackson. I'm doing ok.",
                 }
             );

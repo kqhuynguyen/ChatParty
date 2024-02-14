@@ -2,12 +2,12 @@
 
 namespace ChatParty.Models
 {
-    public class MessageGroup
+    public class Channel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Message> Messages { get; set; } = new List<Message>();
+        public ICollection<GroupMessage> Messages { get; set; } = new List<GroupMessage>();
         public ICollection<User> Users { get; set; } = new List<User>();
     }
 }

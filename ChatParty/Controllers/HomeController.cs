@@ -22,14 +22,14 @@ namespace ChatParty.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> All()
         {
-            var messageGroups = await _context.MessageGroup
+            var channels = await _context.Channel
                 .OrderByDescending(mg => mg.Messages.OrderByDescending(m=>m.Created).First().Created)
                 .Include(mg => mg.Messages.OrderByDescending(m => m.Created).Take(1))
                 .ThenInclude(m => m.User)
                 .Take(10)
                 .ToListAsync();
 
-            return View(messageGroups);
+            return View(channels);
         }
 
         [AllowAnonymous]

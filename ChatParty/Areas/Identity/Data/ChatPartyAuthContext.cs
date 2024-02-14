@@ -11,7 +11,7 @@ public class ChatPartyAuthContext : IdentityDbContext<User>
 	{
 	}
 	public DbSet<Models.User> User { get; set; } = default!;
-	public DbSet<Models.Message> Message { get; set; } = default!;
-	public DbSet<Models.MessageGroup> MessageGroup { get; set; } = default!;
+	public DbSet<Models.GroupMessage> GroupMessage { get; set; } = default!;
+	public DbSet<Models.Channel> Channel { get; set; } = default!;
 
 }

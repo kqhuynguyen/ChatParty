@@ -9,6 +9,6 @@ public class ChatPartyContext : DbContext
     {
     }
     public DbSet<Models.User> User { get; set; } = default!;
-    public DbSet<Models.Message> Messages { get; set; } = default!;
+    public DbSet<Models.GroupMessage> Messages { get; set; } = default!;
 
 }

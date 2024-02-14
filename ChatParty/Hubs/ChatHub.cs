@@ -28,11 +28,11 @@ namespace ChatParty.Hubs
             var user = await _userManager.GetUserAsync(Context.User);
             if (user != null)
             {
-                var messageObject = new Message
+                var messageObject = new GroupMessage
                 {
                     UserId = user.Id,
                     Content = message,
-                    MessageGroupId = groupId,
+                    ChannelId = groupId,
                 };
                 nameOfSender = user.UserName;
                 _authContext.Add(messageObject);
