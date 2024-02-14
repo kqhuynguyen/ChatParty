@@ -12,6 +12,36 @@
                 results: function (amount) {
                     return amount + ' results.'
                 }
+            },
+            focus: function(event, ui) {
+                if (ui.item !== null) {
+                    $("#searchbar").val("");
+                }
+            },
+            select: function (event, ui) {
+                if (ui.item !== null) {
+                    $("#searchbar").val("");
+                }
+                console.log(ui.item.type)
+                var redirectUrl;
+                if (ui.item.type === "User") {
+                    redirectUrl = `/User/Chat?id=${ui.item.value}`;
+                    window.location = redirectUrl;
+                } else if (ui.item.type === "Channel") {
+                    redirectUrl = `/Channel?id=${ui.item.value}`;
+                    window.location = redirectUrl;
+                } else {
+                    console.log("Error");
+                }
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $("<li>")
+                        .attr("data-type", item.type)
+                        .attr("data-id", item.value)
+                        .append(item.label)
+                        .appendTo(ul);
+                };
             }
     })}); 
 </script>

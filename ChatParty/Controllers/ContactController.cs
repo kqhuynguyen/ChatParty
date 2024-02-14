@@ -18,14 +18,23 @@ namespace ChatParty.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Search(string term)
         {
-            var suggestions = await _context.Channel.Where(
-                mg => mg.Name.Contains(term)
-                ).Take(10).Select(mg => mg.Name).ToListAsync();
+            var suggestions = await _context
+                .Channel
+                .Where(
+                    c => c.Name.Contains(term)
+                )
+                .Take(10)
+                .Select(
+                    c => new { Label = c.Name, Value = c.Id, Type = "Channel" }
+                )
+                .ToListAsync();
             suggestions.AddRange(
-                await _context.User.Where(
-                    mg => mg.UserName.Contains(term)
+                await _context
+                .User
+                .Where(
+                    m => m.UserName.Contains(term)
                 ).Select(
-                    m => m.UserName
+                    m => new { Label = m.UserName, Value = m.Id, Type = "User" }
                 ).Take(10).ToListAsync());
             return Json(suggestions);
         }

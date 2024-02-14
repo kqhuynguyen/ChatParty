@@ -33,7 +33,7 @@ namespace ChatParty.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return Redirect("/Home/All");
         }

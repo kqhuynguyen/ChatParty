@@ -1,4 +1,5 @@
-﻿using ChatParty.Areas.Identity.Data;
+﻿using System.Security.Claims;
+using ChatParty.Areas.Identity.Data;
 using ChatParty.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,14 +11,29 @@ namespace ChatParty.Controllers
     public class UsersController : Controller
     {
         private readonly ChatPartyAuthContext _context;
+        private readonly UserManager<User> _userManager;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
-        public UsersController(ChatPartyAuthContext context)
+        public UsersController(ChatPartyAuthContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: Users
+        [AllowAnonymous]
+        public async Task<IActionResult> Chat(string id)
+        {
+            ClaimsPrincipal currentUser = this.User;
+            var fromId = _userManager.GetUserId(User);
+            var messages = await _context
+                .Message
+                .Where(m => (m.FromId == fromId) || (m.ToId == fromId) || (m.FromId == id) || (m.ToId == id))
+                .Include(m => m.From)
+                .Include(m => m.To)
+                .ToListAsync();
+            return View(messages);
+        }
+
         public async Task<IActionResult> Index()
         {
             return _context.User != null ?
