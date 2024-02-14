@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="~/ChatParty.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 </head>
 <body class="bg-gray-900 text-white">
     <header>
@@ -37,7 +39,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="text-decoration-none">
+                    <a href="/Send" class="text-decoration-none">
                         <div class="flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0 rounded-full 
                                 bg-gray-200 p-2 m-1 text-black text-center align-middle hover:bg-gray-100">
                                 <svg  version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" enable-background="new 0 0 16 16">
@@ -56,13 +58,11 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2024 - ChatParty - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

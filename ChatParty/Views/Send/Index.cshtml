@@ -1,0 +1,18 @@
+﻿
+<div>
+	<input id="searchbar" type="text" class="mr-1 ml-1 p-2 w-full rounded-lg bg-gray-500 text-white"/>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#searchbar").autocomplete({
+            source: 'Contact/Search',
+            minLength: 3,
+            messages: {
+                noResults: 'no results',
+                results: function (amount) {
+                    return amount + ' results.'
+                }
+            }
+        });
+    });
+</script>
