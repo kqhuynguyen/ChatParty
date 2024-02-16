@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatParty.Migrations
 {
     [DbContext(typeof(ChatPartyAuthContext))]
-    [Migration("20240214102541_InitCreate")]
-    partial class InitCreate
+    [Migration("20240216160638_InitDatabase")]
+    partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,13 +26,13 @@ namespace ChatParty.Migrations
 
             modelBuilder.Entity("ChannelUser", b =>
                 {
-                    b.Property<string>("MessageGroupsId")
+                    b.Property<string>("ChannelId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UsersId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("MessageGroupsId", "UsersId");
+                    b.HasKey("ChannelId", "UsersId");
 
                     b.HasIndex("UsersId");
 
@@ -85,6 +85,40 @@ namespace ChatParty.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("GroupMessage");
+                });
+
+            modelBuilder.Entity("ChatParty.Models.Message", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FromId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ToId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ToId");
+
+                    b.HasIndex("FromId", "ToId")
+                        .IsUnique();
+
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("ChatParty.Models.User", b =>
@@ -302,7 +336,7 @@ namespace ChatParty.Migrations
                 {
                     b.HasOne("ChatParty.Models.Channel", null)
                         .WithMany()
-                        .HasForeignKey("MessageGroupsId")
+                        .HasForeignKey("ChannelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -330,6 +364,25 @@ namespace ChatParty.Migrations
                     b.Navigation("MessageGroup");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ChatParty.Models.Message", b =>
+                {
+                    b.HasOne("ChatParty.Models.User", "From")
+                        .WithMany()
+                        .HasForeignKey("FromId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ChatParty.Models.User", "To")
+                        .WithMany()
+                        .HasForeignKey("ToId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("From");
+
+                    b.Navigation("To");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

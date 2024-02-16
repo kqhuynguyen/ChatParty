@@ -21,13 +21,18 @@ namespace ChatParty.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Chat(string id)
+        public async Task<IActionResult> Chat(string? id)
         {
+            if (id == null || _context.User == null)
+            {
+                return NotFound();
+            }
             ClaimsPrincipal currentUser = this.User;
             var fromId = _userManager.GetUserId(User);
             var messages = await _context
                 .Message
-                .Where(m => (m.FromId == fromId) || (m.ToId == fromId) || (m.FromId == id) || (m.ToId == id))
+                .OrderBy(m => m.Created)
+                .Where(m => (m.From.Id == fromId) || (m.To.Id == fromId) || (m.From.Id == id) || (m.To.Id == id))
                 .Include(m => m.From)
                 .Include(m => m.To)
                 .ToListAsync();

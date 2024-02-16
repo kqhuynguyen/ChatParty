@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Models
 {
-    [Index(nameof(FromId), nameof(ToId), IsUnique = true)]
     public class Message
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
-        public string FromId { get; set; }
-        public string ToId { get; set; }
+        public string? FromId { get; set; }
+        public string? ToId { get; set; }
         public User From { get; set; } = null!;
         public User To { get; set; } = null!;
         public string Content { get; set; } = "";

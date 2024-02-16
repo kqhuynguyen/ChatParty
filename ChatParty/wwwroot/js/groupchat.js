@@ -14,6 +14,7 @@ connection.on("ReceiveMessage", function (user, message) {
 		<div class="text-blue-300 text-xs mr-4 shrink-0 flex-grow-0 basis-15">User 1:</div>
 		<div class="text-balance text-white-50 text-sm">Lorem ipsum donor salova.</div>
 	</div>`
+
     const div = template.content.cloneNode(true).children[0];
     div.children[0].textContent = `${user}:`;
     div.children[1].textContent = message;
@@ -28,6 +29,8 @@ connection.on("ReceiveMessage", function (user, message) {
 
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
+    var groupId = document.getElementById("messageGroupId").innerText;
+    return connection.invoke("addToGroup", groupId);
 }).catch(function (err) {
     return console.error(err.toString());
 });
@@ -35,14 +38,12 @@ connection.start().then(function () {
 
 function onSendButtonclick(event) {
     var message = document.getElementById("messageInput").value;
-    var params = (new URL(document.location)).searchParams;
-    let toId = params.get("id");
-    connection.invoke("SendMessage", message, toId).catch(function (err) {
+    var groupId = document.getElementById("messageGroupId").innerText;
+    connection.invoke("SendGroupMessage", message, groupId).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
 }
-
 
 function onEnter(event) {
     event.preventDefault();

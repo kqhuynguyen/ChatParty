@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ChatParty.Migrations
 {
-    public partial class InitCreate : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -170,15 +170,41 @@ namespace ChatParty.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Message",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FromId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ToId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Message", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Message_AspNetUsers_FromId",
+                        column: x => x.FromId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Message_AspNetUsers_ToId",
+                        column: x => x.ToId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ChannelUser",
                 columns: table => new
                 {
-                    MessageGroupsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChannelId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChannelUser", x => new { x.MessageGroupsId, x.UsersId });
+                    table.PrimaryKey("PK_ChannelUser", x => new { x.ChannelId, x.UsersId });
                     table.ForeignKey(
                         name: "FK_ChannelUser_AspNetUsers_UsersId",
                         column: x => x.UsersId,
@@ -186,8 +212,8 @@ namespace ChatParty.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ChannelUser_Channel_MessageGroupsId",
-                        column: x => x.MessageGroupsId,
+                        name: "FK_ChannelUser_Channel_ChannelId",
+                        column: x => x.ChannelId,
                         principalTable: "Channel",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -274,6 +300,17 @@ namespace ChatParty.Migrations
                 name: "IX_GroupMessage_UserId",
                 table: "GroupMessage",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Message_FromId_ToId",
+                table: "Message",
+                columns: new[] { "FromId", "ToId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Message_ToId",
+                table: "Message",
+                column: "ToId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -300,13 +337,16 @@ namespace ChatParty.Migrations
                 name: "GroupMessage");
 
             migrationBuilder.DropTable(
+                name: "Message");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Channel");
 
             migrationBuilder.DropTable(
-                name: "Channel");
+                name: "AspNetUsers");
         }
     }
 }

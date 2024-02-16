@@ -1,4 +1,5 @@
-﻿using ChatParty.Models;
+﻿using System.Reflection.Metadata;
+using ChatParty.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,28 @@ namespace ChatParty.Areas.Identity.Data;
 
 public class ChatPartyAuthContext : IdentityDbContext<User>
 {
-	public ChatPartyAuthContext(DbContextOptions<ChatPartyAuthContext> options)
+    #region Required
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder
+            .Entity<Message>()
+            .HasOne(e => e.From)
+            .WithMany()
+            .HasForeignKey(e => e.FromId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder
+            .Entity<Message>()
+            .HasOne(e => e.To)
+            .WithMany()
+            .HasForeignKey(e => e.ToId)
+            .OnDelete(DeleteBehavior.NoAction);
+        
+    }
+    #endregion
+    public ChatPartyAuthContext(DbContextOptions<ChatPartyAuthContext> options)
 		: base(options)
 	{
 	}

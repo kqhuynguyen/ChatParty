@@ -7,7 +7,7 @@ namespace ChatParty.Models
         public DateTime CreatedDate { get; set; }
         public DateTime BirthDate { get; set; }
         public int Status { get; set; }
-        public ICollection<Channel> MessageGroups { get; set; } = new List<Channel>();
+        public ICollection<Channel> Channel { get; set; } = new List<Channel>();
 
     }
 }

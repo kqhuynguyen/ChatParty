@@ -1,4 +1,5 @@
 ﻿
+using System.Text.RegularExpressions;
 using ChatParty.Areas.Identity.Data;
 using ChatParty.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,23 @@ namespace ChatParty.Hubs
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
         }
-        public async Task SendMessage(string message, string groupId)
+        public async Task SendMessage(string message, string toId)
+        {
+            var user = await _userManager.GetUserAsync(Context.User);
+            var messageObject = new Message
+            {
+                FromId = user.Id,
+                ToId = toId,
+                Content = message,
+            };
+            _authContext.Add(messageObject);
+            _authContext.SaveChanges();
+
+            var nameOfSender = user.UserName;
+            await Clients.Users(user.Id, toId).SendAsync("ReceiveMessage", nameOfSender, message);
+        }
+
+        public async Task SendGroupMessage(string message, string groupId)
         {
             var nameOfSender = "Guest";
             var user = await _userManager.GetUserAsync(Context.User);

@@ -25,7 +25,7 @@
                 console.log(ui.item.type)
                 var redirectUrl;
                 if (ui.item.type === "User") {
-                    redirectUrl = `/User/Chat?id=${ui.item.value}`;
+                    redirectUrl = `/Users/Chat?id=${ui.item.value}`;
                     window.location = redirectUrl;
                 } else if (ui.item.type === "Channel") {
                     redirectUrl = `/Channel?id=${ui.item.value}`;
