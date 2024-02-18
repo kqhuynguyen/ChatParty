@@ -32,7 +32,7 @@ namespace ChatParty.Controllers
             var messages = await _context
                 .Message
                 .OrderBy(m => m.Created)
-                .Where(m => (m.From.Id == fromId) || (m.To.Id == fromId) || (m.From.Id == id) || (m.To.Id == id))
+                .Where(m => ((m.From.Id == fromId) && (m.To.Id == id)) || ((m.From.Id == id) && (m.To.Id == fromId)))
                 .Include(m => m.From)
                 .Include(m => m.To)
                 .ToListAsync();
