@@ -24,7 +24,6 @@ namespace ChatParty.Controllers
             _userManager = userManager;
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> All()
         {
             List<HomeMessage> homeMessages = new List<HomeMessage>();
@@ -49,8 +48,9 @@ namespace ChatParty.Controllers
                     }
                 );
             }
+            var currentUserId = _userManager.GetUserId(User);
             var userMessages = await _context.Message
-                .Where(m => m.FromId == _userManager.GetUserId(User))
+                .Where(m => (m.FromId == currentUserId || (m.ToId == currentUserId)))
                 .Include(m => m.From)
                 .Include(m => m.To)
                 .GroupBy(m => m.ToId)
@@ -62,8 +62,8 @@ namespace ChatParty.Controllers
                 homeMessages.Add(
                     new HomeMessage
                     {
-                        Id = userMessage.ToId,
-                        Name = userMessage.To.UserName,
+                        Id = userMessage.ToId != currentUserId ? userMessage.ToId : userMessage.FromId,
+                        Name = userMessage.ToId != currentUserId ? userMessage.To.UserName : userMessage.From.UserName,
                         ChatType = ChatType.Individual,
                         LastSender = userMessage.From.UserName,
                         LastMessage = userMessage.Content,
@@ -75,7 +75,6 @@ namespace ChatParty.Controllers
             return View(homeMessages);
         }
 
-        [AllowAnonymous]
         public IActionResult Index()
         {
             return Redirect("/Home/All");

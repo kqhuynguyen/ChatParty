@@ -14,7 +14,6 @@ namespace ChatParty.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> Index(string? id)
         {
             if (id == null || _context.Channel == null)
