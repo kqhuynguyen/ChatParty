@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ChatParty.Models.Message>
+
+<div class="mt-2 flex flex-col">
+	<div class="overflow-hidden ml-3 flex flex-col justify-content-start" id="messagesList">
+
+		@foreach (var message in Model)
+		{
+		<div class="flex flex-row">
+			<div class="text-blue-300 text-xs mr-4 shrink-0 flex-grow-0 basis-15">@message.From.UserName:</div>
+			<div class="text-balance  text-white-50 text-sm">@message.Content</div>
+		</div>
+		}
+	</div>
+	<div class="ml-3 justify-content-start flex flex-row mt-2 place-content-center">
+		<label for="messageInput" class="text-blue-500 text-xs mr-4">Message</label>
+		<input id="messageInput" type="text" class="flex-grow-5 placeholder:italic placeholder:text-slate-400 pl-2 py-0 text-xs text-slate-900 bg-slate-300 border-1 rounded-md mr-4" placeholder="Enter your message" required>
+		<button id="sendButton" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm basis-auto sm:w-auto px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Send</button>
+	</div>
+</div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+
+

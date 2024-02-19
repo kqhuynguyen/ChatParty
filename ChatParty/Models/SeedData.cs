@@ -1,64 +1,98 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using ChatParty.Areas.Identity.Data;
 using ChatParty.Data;
-using ChatParty.Models;
-using System;
-using System.Linq;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Models;
 
 public static class SeedData
 {
+    private static readonly PasswordHasher<User> hasher = new PasswordHasher<User>();
 
-
-    public static void Initialize(IServiceProvider serviceProvider)
+    public async static Task Initialize(IServiceProvider serviceProvider)
     {
-        using (var context = new ChatPartyContext(
+        using (var context = new ChatPartyAuthContext(
             serviceProvider.GetRequiredService<
-                DbContextOptions<ChatPartyContext>>()))
+                DbContextOptions<ChatPartyAuthContext>>()))
         {
-            var hasher = new PasswordHasher<User>();
 
+
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             // Look for any movies.
-            if (context.User.Any())
+            if (context.User.Any() || context.User.Any() || context.Channel.Any())
             {
                 return;   // DB has been seeded
             }
-            context.User.AddRange(
-                new User
+
+            var exampleUserId1 = Guid.NewGuid().ToString();
+            var exampleUserId2 = Guid.NewGuid().ToString();
+
+            var result = await userManager.CreateAsync(new User
+            {
+                Id = exampleUserId1,
+                UserName = "JacksonSteward",
+                Email = "jackson@gmail.com",
+                CreatedDate = DateTime.Parse("2023-1-1"),
+                EmailConfirmed = true,
+                BirthDate = DateTime.Parse("1960-1-1"),
+                Status = 1
+            }, "abc123456890");
+            await userManager.CreateAsync(new User
+            {
+                Id = exampleUserId2,
+                UserName = "YukinoSpielberg",
+                Email = "yukino@gmail.com",
+                CreatedDate = DateTime.Parse("2023-9-12"),
+                EmailConfirmed = true,
+                BirthDate = DateTime.Parse("2001-4-30"),
+                Status = 1
+            }, "abc123456890");
+            await userManager.CreateAsync(new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = "ChristopherLennon",
+                Email = "chris@gmail.com",
+                CreatedDate = DateTime.Parse("2024-1-8"),
+                EmailConfirmed = true,
+                BirthDate = DateTime.Parse("2005-12-16"),
+                Status = 0
+            }, "abc123456890");
+            await userManager.CreateAsync(new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = "EricTurk",
+                Email = "eric@gmail.com",
+                CreatedDate = DateTime.Parse("2001-5-8"),
+                EmailConfirmed = true,
+                BirthDate = DateTime.Parse("1998-9-23"),
+                Status = 1
+            }, "abc123456890");
+
+            context.Channel.AddRange(
+                new Channel
                 {
-                    Name = "Jackson Steward",
-                    Password = hasher.HashPassword(null, "abc123456890"),
-                    CreatedDate= DateTime.Parse("2023-1-1"),
-                    BirthDate = DateTime.Parse("1960-1-1"),
-                    Status = 1
-                },
-                new User
-                {
-                    Name = "Yukino Spielberg",
-                    Password = hasher.HashPassword(null, "abc123456890"),
-                    CreatedDate = DateTime.Parse("2023-9-12"),
-                    BirthDate = DateTime.Parse("2001-4-30"),
-                    Status = 1
-                },
-                new User
-                {
-                    Name = "Christopher Lennon",
-                    Password = hasher.HashPassword(null, "abc123456890"),
-                    CreatedDate = DateTime.Parse("2024-1-8"),
-                    BirthDate = DateTime.Parse("2005-12-16"),
-                    Status = 0
-                },
-                new User
-                {
-                    Name = "Eric Turk",
-                    Password = hasher.HashPassword(null, "abc123456890"),
-                    CreatedDate = DateTime.Parse("2001-5-8"),
-                    BirthDate = DateTime.Parse("1998-9-23"),
-                    Status = 1
+                    Id = Constants.PublicMessageGroupId,
+                    Name = "Public Group",
                 }
             );
+
+            context.GroupMessage.AddRange(
+                new GroupMessage
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = exampleUserId1,
+                    ChannelId = Constants.PublicMessageGroupId,
+                    Content = "Hello friends. Jackson's here. How are you today?",
+                },
+                new GroupMessage
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = exampleUserId2,
+                    ChannelId = Constants.PublicMessageGroupId,
+                    Content = "Hi Jackson. I'm doing ok.",
+                }
+            );
+
             context.SaveChanges();
         }
     }

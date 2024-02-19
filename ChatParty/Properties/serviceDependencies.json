@@ -6,6 +6,10 @@
     "sqlite1": {
       "type": "sqlite",
       "connectionId": "ConnectionStrings:ChatPartyContextSQLite"
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:ChatPartyAuthContextConnection"
     }
   }
 }

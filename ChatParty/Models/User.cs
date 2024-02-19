@@ -1,15 +1,13 @@
-﻿namespace ChatParty.Models
-{
-    public class User
-    {
+﻿using Microsoft.AspNetCore.Identity;
 
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
+namespace ChatParty.Models
+{
+    public class User : IdentityUser
+    {
         public DateTime CreatedDate { get; set; }
         public DateTime BirthDate { get; set; }
         public int Status { get; set; }
+        public ICollection<Channel> Channel { get; set; } = new List<Channel>();
 
     }
 }
- 

@@ -1,0 +1,47 @@
+﻿
+<div>
+	<input id="searchbar" type="text" class="mr-1 ml-1 p-2 w-full rounded-lg bg-gray-500 text-white"/>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#searchbar").autocomplete({
+            source: 'Contact/Search',
+            minLength: 3,
+            messages: {
+                noResults: 'no results',
+                results: function (amount) {
+                    return amount + ' results.'
+                }
+            },
+            focus: function(event, ui) {
+                if (ui.item !== null) {
+                    $("#searchbar").val("");
+                }
+            },
+            select: function (event, ui) {
+                if (ui.item !== null) {
+                    $("#searchbar").val("");
+                }
+                console.log(ui.item.type)
+                var redirectUrl;
+                if (ui.item.type === "User") {
+                    redirectUrl = `/Users/Chat?id=${ui.item.value}`;
+                    window.location = redirectUrl;
+                } else if (ui.item.type === "Channel") {
+                    redirectUrl = `/Channel?id=${ui.item.value}`;
+                    window.location = redirectUrl;
+                } else {
+                    console.log("Error");
+                }
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $("<li>")
+                        .attr("data-type", item.type)
+                        .attr("data-id", item.value)
+                        .append(item.label)
+                        .appendTo(ul);
+                };
+            }
+    })}); 
+</script>

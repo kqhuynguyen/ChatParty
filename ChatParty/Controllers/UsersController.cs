@@ -1,51 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ChatParty.Data;
+﻿using System.Security.Claims;
+using ChatParty.Areas.Identity.Data;
 using ChatParty.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly ChatPartyContext _context;
+        private readonly ChatPartyAuthContext _context;
+        private readonly UserManager<User> _userManager;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
-        public UsersController(ChatPartyContext context)
+        public UsersController(ChatPartyAuthContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: Users
+        public async Task<IActionResult> Chat(string? id)
+        {
+            if (id == null || _context.User == null)
+            {
+                return NotFound();
+            }
+            ClaimsPrincipal currentUser = this.User;
+            var fromId = _userManager.GetUserId(User);
+            var messages = await _context
+                .Message
+                .OrderBy(m => m.Created)
+                .Where(m => ((m.From.Id == fromId) && (m.To.Id == id)) || ((m.From.Id == id) && (m.To.Id == fromId)))
+                .Include(m => m.From)
+                .Include(m => m.To)
+                .ToListAsync();
+            return View(messages);
+        }
+
         public async Task<IActionResult> Index()
         {
-              return _context.User != null ? 
-                          View(await _context.User.ToListAsync()) :
-                          Problem("Entity set 'ChatPartyContext.User'  is null.");
+            return _context.User != null ?
+                        View(await _context.User.ToListAsync()) :
+                        Problem("Entity set 'ChatPartyContext.User'  is null.");
         }
 
-        public IActionResult SignIn()
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignIn([Bind("Name,Password")] User user)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([Bind("UserName,Password")] User user)
         {
-            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Password))
+            if (string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.PasswordHash))
             {
                 return StatusCode(400);
             }
             using (_context)
             {
-                var hashedPassword = _context.User.Single(u => u.Name.Trim() == user.Name.Trim()).Password;
-                if (_passwordHasher.VerifyHashedPassword(null, hashedPassword, user.Password) == PasswordVerificationResult.Success)
+                var hashedPassword = _context.User.Single(u => u.UserName.Trim() == user.UserName.Trim()).PasswordHash;
+                if (_passwordHasher.VerifyHashedPassword(new Models.User(), hashedPassword, user.PasswordHash) == PasswordVerificationResult.Success)
                 {
                     return Ok("Sign in successful");
                 }
@@ -53,8 +77,7 @@ namespace ChatParty.Controllers
             return StatusCode(400);
         }
 
-        // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
             if (id == null || _context.User == null)
             {
@@ -71,18 +94,14 @@ namespace ChatParty.Controllers
             return View(user);
         }
 
-        // GET: Users/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CreatedDate,BirthDate,Status")] User user)
+        public async Task<IActionResult> Create([Bind("Id,UserName,CreatedDate,BirthDate,Status")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +113,7 @@ namespace ChatParty.Controllers
         }
 
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? id)
         {
             if (id == null || _context.User == null)
             {
@@ -114,7 +133,7 @@ namespace ChatParty.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedDate,BirthDate,Status")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,CreatedDate,BirthDate,Status")] User user)
         {
             if (id != user.Id)
             {
@@ -145,7 +164,7 @@ namespace ChatParty.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null || _context.User == null)
             {
@@ -176,14 +195,14 @@ namespace ChatParty.Controllers
             {
                 _context.User.Remove(user);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(string id)
         {
-          return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
