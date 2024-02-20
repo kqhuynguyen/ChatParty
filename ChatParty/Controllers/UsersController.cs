@@ -35,7 +35,13 @@ namespace ChatParty.Controllers
                 .Include(m => m.From)
                 .Include(m => m.To)
                 .ToListAsync();
-            return View(messages);
+            var receiver = await _userManager.FindByIdAsync(id);
+            var userChatViewModel = new UserChatViewModel
+            {
+                Receiver = receiver.UserName,
+                Messages= messages
+            };
+            return View(userChatViewModel);
         }
 
         public async Task<IActionResult> Index()

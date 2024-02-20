@@ -5,7 +5,7 @@
         Channel,
         Individual
     }
-    public class HomeMessage
+    public class HomeMessageViewModel
     {
         public string Id { get; set; }
         public ChatType ChatType { get; set; }
