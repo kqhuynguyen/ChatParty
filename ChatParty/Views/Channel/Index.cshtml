@@ -19,8 +19,8 @@
 		@foreach (var message in Model.Messages)
 		{
 		<div class="flex flex-row">
-			<div class="text-blue-300 text-xs mr-4 shrink-0 flex-grow-0 basis-15">@message.User.UserName:</div>
-			<div class="text-balance  text-white-50 text-sm">@message.Content</div>
+			<div class="text-blue-300 flex flex-row items-start text-xs mr-4 shrink-0 flex-grow-0 basis-15">@message.User.UserName:</div>
+			<div class="text-balance flex flex-row items-start text-white-50 text-sm">@message.Content</div>
 		</div>
 		}
 	</div>
