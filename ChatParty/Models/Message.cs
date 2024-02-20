@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Models
