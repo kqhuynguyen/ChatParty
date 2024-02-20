@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Channels;
+using System.Linq;
 
 namespace ChatParty.Controllers
 {
@@ -26,7 +27,7 @@ namespace ChatParty.Controllers
 
         public async Task<IActionResult> All()
         {
-            List<HomeMessage> homeMessages = new List<HomeMessage>();
+            List<HomeMessageViewModel> homeMessages = new List<HomeMessageViewModel>();
 
             var channels = await _context.Channel
                 .OrderByDescending(mg => mg.Messages.OrderByDescending(m=>m.Created).First().Created)
@@ -37,7 +38,7 @@ namespace ChatParty.Controllers
             foreach (var channel in channels)
             {
                 homeMessages.Add(
-                    new HomeMessage
+                    new HomeMessageViewModel
                     {
                         Id = channel.Id,
                         Name = channel.Name,
@@ -49,25 +50,49 @@ namespace ChatParty.Controllers
                 );
             }
             var currentUserId = _userManager.GetUserId(User);
+
             var userMessages = await _context.Message
-                .Where(m => (m.FromId == currentUserId || (m.ToId == currentUserId)))
+                .Where(m => m.FromId == currentUserId)
                 .Include(m => m.From)
                 .Include(m => m.To)
-                .GroupBy(m => m.ToId)
-                .Select(m => m.OrderByDescending(m => m.Created).First())
+                .Select(m => new
+                {
+                    ReceiverId = m.To.Id,
+                    ReceiverName = m.To.UserName,
+                    LastSender = m.From.UserName,
+                    Content = m.Content,
+                    LastSentAt = m.Created
+                })
+                .Union(
+                    _context.Message
+                    .Where(m => m.ToId == currentUserId)
+                    .Include(m => m.From)
+                    .Include(m => m.To)
+                    .Select(m => new
+                    {
+                        ReceiverId = m.From.Id,
+                        ReceiverName = m.From.UserName,
+                        LastSender = m.From.UserName,
+                        Content = m.Content,
+                        LastSentAt = m.Created
+                    })
+                )
+                .GroupBy(m =>new { m.ReceiverId })
+                .Select(m => m.OrderByDescending(m => m.LastSentAt).First())
                 .Take(10)
                 .ToListAsync();
+
             foreach (var userMessage in userMessages)
             {
                 homeMessages.Add(
-                    new HomeMessage
+                    new HomeMessageViewModel
                     {
-                        Id = userMessage.ToId != currentUserId ? userMessage.ToId : userMessage.FromId,
-                        Name = userMessage.ToId != currentUserId ? userMessage.To.UserName : userMessage.From.UserName,
+                        Id = userMessage.ReceiverId,
+                        Name = userMessage.ReceiverName,
                         ChatType = ChatType.Individual,
-                        LastSender = userMessage.From.UserName,
+                        LastSender = userMessage.LastSender,
                         LastMessage = userMessage.Content,
-                        LastSentAt = userMessage.Created
+                        LastSentAt = userMessage.LastSentAt
                     }
                 );
             }
