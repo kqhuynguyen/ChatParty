@@ -10,6 +10,18 @@
                 p-2 m-1 align-middle">
 		<svg class="fill-gray-400 hover:fill-gray-300" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z" /></svg>
 	</div>
+	<div x-data="{ open: false }"
+	 class="absolute inset-y-0 right-0 flex items-center p-2 m-1 align-middle">
+		<button x-on:click="open = !open">
+			<svg class="fill-gray-400 hover:fill-gray-300" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z" /></svg>
+		</button>
+		<ul x-on:click.outside="open = false" x-show="open" class="absolute pl-0 right-0 top-8 mt-2 z-20 bg-blue-600 text-gray-50 w-40 border-gray-50 top-24 list-none">
+			<li class="text-left px-1.5 py-1 hover:bg-blue-500">Members</li>
+			<li class="text-left px-1.5 py-1 hover:bg-blue-500">Group call</li>
+			<li class="text-left px-1.5 py-1 hover:bg-blue-500">Add people to chat</li>
+		</ul>
+
+	</div>
 }
 
 <div class="hidden" id="messageGroupId">@Model.Id</div>
