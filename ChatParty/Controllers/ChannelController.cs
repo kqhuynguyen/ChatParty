@@ -35,13 +35,22 @@ namespace ChatParty.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name", "Users")] Channel channel)
+        public async Task<IActionResult> Create([Bind("Name")] Channel channel, List<string> userIds)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(channel);
+                foreach (var userId in userIds)
+                { 
+                    var user = await _context.User.Where(u => u.Id == userId).FirstOrDefaultAsync();
+                    if (user == null)
+                    {
+                        return NotFound("User not found: " + userId);
+                    }
+                    channel.Users.Add(user);
+                }
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { id = channel.Id } );
+                return RedirectToAction(nameof(Index), new { id = channel.Id });
             }
             return BadRequest();
         }
