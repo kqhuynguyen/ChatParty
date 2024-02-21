@@ -37,6 +37,10 @@ namespace ChatParty.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name")] Channel channel, List<string> userIds)
         {
+            if (userIds.Count < 3)
+            {
+                return BadRequest("Number of UserIDs can't be smaller than 3");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(channel);
@@ -52,7 +56,7 @@ namespace ChatParty.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index), new { id = channel.Id });
             }
-            return BadRequest();
+            return BadRequest("An error occured during validation.");
         }
 
         [HttpPost]
