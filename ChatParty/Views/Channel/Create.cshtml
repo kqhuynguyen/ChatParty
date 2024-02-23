@@ -1,0 +1,87 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<div>
+    <input id="searchbar" type="text" class=" mt-3 p-2 w-full bg-gray-500 text-white bg-gray-900 border-b-2" />
+</div>
+<script type="text/javascript">
+
+    function split(val) {
+        return val.split(/,\s*/);
+    }
+
+    function extractLast(term) {
+        return split(term).pop();
+    }
+
+    $(function () {
+        $("#searchbar").autocomplete({
+            source: async function (request, response) {
+                console.log(extractLast(request.term))
+                const fetchResponse = await fetch("/Users/Search?" + new URLSearchParams({
+                    term: extractLast(request.term)
+                }))
+                if (fetchResponse.status === 200) {
+                    response(await fetchResponse.json())
+                }
+            },
+            minLength: 1,
+            messages: {
+                noResults: 'no results',
+                results: function (amount) {
+                    return amount + ' results.'
+                }
+            },
+            focus: function (event, ui) {
+                if (ui.item !== null) {
+                    $("#searchbar").val("");
+                }
+            },
+            select: function (event, ui) {
+                var terms = split(this.value);
+                terms.pop();
+                terms.push(ui.item.value);
+                terms.push(" ");
+                this.value = terms.join(", ");
+                return false; 
+            },
+            create: function () {
+                $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    return $("<li>")
+                        .attr("data-type", item.type)
+                        .attr("data-id", item.value)
+                        .append(item.label)
+                        .appendTo(ul);
+                };
+            }
+        })
+    });
+    $("#searchbar").on("keypress", async (e) => {
+        if (e.which == 13) {
+            let userIds = $("#searchbar").val().split(", ")
+            userIds.pop()
+            let data = {
+                Name: "New Channel",
+                UserIds: userIds
+            }
+            const response = await fetch("/Channel/Create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+            console.log(response)
+            if (response.status === 200) {
+                let responseBody = await response.json();
+                let id = responseBody["id"]
+                redirectUrl = `/Channel?id=${id}`;
+                window.location = redirectUrl;
+            }
+        }
+    });
+</script>

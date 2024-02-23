@@ -37,17 +37,30 @@ namespace ChatParty.Controllers
                 .ToListAsync();
             foreach (var channel in channels)
             {
-                homeMessages.Add(
-                    new HomeMessageViewModel
-                    {
-                        Id = channel.Id,
-                        Name = channel.Name,
-                        ChatType = ChatType.Channel,
-                        LastSender = channel.Messages.ElementAt(0).User.UserName,
-                        LastMessage = channel.Messages.ElementAt(0).Content,
-                        LastSentAt = channel.Messages.ElementAt(0).Created,
-                    }
-                );
+                if (channel.Messages.Count > 0)
+                {
+                    homeMessages.Add(
+                        new HomeMessageViewModel
+                        {
+                            Id = channel.Id,
+                            Name = channel.Name,
+                            ChatType = ChatType.Channel,
+                            LastSender = channel.Messages.ElementAt(0).User.UserName,
+                            LastMessage = channel.Messages.ElementAt(0).Content,
+                            LastSentAt = channel.Messages.ElementAt(0).Created,
+                        }
+                    );
+                } else
+                {
+                    homeMessages.Add(
+                        new HomeMessageViewModel
+                        {
+                            Id = channel.Id,
+                            Name = channel.Name,
+                            ChatType = ChatType.Channel,
+                        }
+                    );
+                }
             }
             var currentUserId = _userManager.GetUserId(User);
 

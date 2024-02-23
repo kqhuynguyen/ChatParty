@@ -33,18 +33,19 @@ namespace ChatParty.Controllers
             return View(messageGroup);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] Channel channel, List<string> userIds)
+        public async Task<IActionResult> Create()
         {
-            if (userIds.Count < 3)
-            {
-                return BadRequest("Number of UserIDs can't be smaller than 3");
-            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody, Bind("Name", "UserIds")] CreateChannelViewModel viewModel)
+        {
             if (ModelState.IsValid)
             {
+                var channel = new Channel { Name = viewModel.Name };
                 _context.Add(channel);
-                foreach (var userId in userIds)
+                foreach (var userId in viewModel.UserIds)
                 { 
                     var user = await _context.User.Where(u => u.Id == userId).FirstOrDefaultAsync();
                     if (user == null)
@@ -54,7 +55,7 @@ namespace ChatParty.Controllers
                     channel.Users.Add(user);
                 }
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { id = channel.Id });
+                return Json(new { id = channel.Id });
             }
             return BadRequest("An error occured during validation.");
         }

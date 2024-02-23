@@ -16,9 +16,8 @@
 		<ul x-on:click.outside="open = false" x-show="open" class="absolute pl-0 right-0 top-8 mt-2 z-20 bg-blue-600 text-gray-50 w-40 border-gray-50 top-24 list-none">
 			<li class="text-left px-1.5 py-1 hover:bg-blue-500">User info</li>
 			<li class="text-left px-1.5 py-1 hover:bg-blue-500">Call</li>
-			<li class="text-left px-1.5 py-1 hover:bg-blue-500">Add people to chat</li>
+			<li class="text-left px-1.5 py-1 hover:bg-blue-500"><a class="text-decoration-none text-inherit" href="/Channel/Create">Add people to chat</a></li>
 		</ul>
-
 	</div>
 }
 <div class="mt-2 h-screen flex flex-col">
@@ -39,5 +38,4 @@
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>
-
-
+<script src="~/js/signalr/dist/browser/channel.js"></script>
