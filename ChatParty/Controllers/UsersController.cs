@@ -20,6 +20,23 @@ namespace ChatParty.Controllers
             _userManager = userManager;
         }
 
+
+        public async Task<IActionResult> Search(string? term)
+        {
+            if (term == null || _context.User == null)
+            {
+                return NotFound();
+            }
+           var suggestions = await _context
+                .User
+                .Where(
+                    m => m.UserName.ToLower().Contains(term.ToLower())
+                ).Select(
+                    m => new { Label = m.UserName, Value = m.Id, Type = "User" }
+                ).Take(10).ToListAsync();
+            return Json(suggestions);
+        }
+
         public async Task<IActionResult> Chat(string? id)
         {
             if (id == null || _context.User == null)

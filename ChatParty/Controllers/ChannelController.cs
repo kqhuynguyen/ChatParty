@@ -33,17 +33,31 @@ namespace ChatParty.Controllers
             return View(messageGroup);
         }
 
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name", "Users")] Channel channel)
+        public async Task<IActionResult> Create([FromBody, Bind("Name", "UserIds")] CreateChannelViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                var channel = new Channel { Name = viewModel.Name };
                 _context.Add(channel);
+                foreach (var userId in viewModel.UserIds)
+                { 
+                    var user = await _context.User.Where(u => u.Id == userId).FirstOrDefaultAsync();
+                    if (user == null)
+                    {
+                        return NotFound("User not found: " + userId);
+                    }
+                    channel.Users.Add(user);
+                }
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { id = channel.Id } );
+                return Json(new { id = channel.Id });
             }
-            return BadRequest();
+            return BadRequest("An error occured during validation.");
         }
 
         [HttpPost]

@@ -12,7 +12,7 @@
         public string Name { get; set; }
         public string? LastSender { get; set; } = null;
         public string? LastMessage { get; set; } = null;
-        public DateTime LastSentAt { get; set; }
+        public DateTime LastSentAt { get; set; } = DateTime.Now;
 
     }
 }
