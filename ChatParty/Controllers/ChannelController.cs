@@ -1,6 +1,7 @@
 ﻿using ChatParty.Areas.Identity.Data;
 using ChatParty.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +10,12 @@ namespace ChatParty.Controllers
     public class ChannelController : Controller
     {
         private readonly ChatPartyAuthContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public ChannelController(ChatPartyAuthContext context)
+        public ChannelController(ChatPartyAuthContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(string? id)
@@ -81,6 +84,25 @@ namespace ChatParty.Controllers
                 return Ok(user.Id);
             }
             return BadRequest();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Leave(string? channelId)
+        {
+            if (channelId == null || _context.Channel == null)
+            {
+                return BadRequest();
+            }
+            var channel = await _context.Channel.Include(c => c.Users).Where(c => c.Id == channelId).FirstOrDefaultAsync();
+            if (channel == null)
+            {
+                return NotFound("Channel not found.");
+            }
+            var currentUser = await _userManager.GetUserAsync(this.User);
+            channel.Users.Remove(currentUser);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
