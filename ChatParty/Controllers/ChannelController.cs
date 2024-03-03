@@ -86,9 +86,7 @@ namespace ChatParty.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Leave(string? channelId)
+        public async Task<IActionResult> Leave(string channelId)
         {
             if (channelId == null || _context.Channel == null)
             {
@@ -102,7 +100,7 @@ namespace ChatParty.Controllers
             var currentUser = await _userManager.GetUserAsync(this.User);
             channel.Users.Remove(currentUser);
             await _context.SaveChangesAsync();
-            return Ok();
+            return Redirect("/Home/All");
         }
     }
 }
