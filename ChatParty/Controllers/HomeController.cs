@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace ChatParty.Controllers
 {
-
+ 
     public class HomeController : Controller
     {
         private readonly ChatPartyAuthContext _context;
