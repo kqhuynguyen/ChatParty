@@ -27,9 +27,11 @@ namespace ChatParty.Controllers
 
         public async Task<IActionResult> All()
         {
+            var currentUserId = _userManager.GetUserId(User);
             List<HomeMessageViewModel> homeMessages = new List<HomeMessageViewModel>();
 
             var channels = await _context.Channel
+                .Where(c => c.Users.Any(u => u.Id == currentUserId))
                 .OrderByDescending(mg => mg.Messages.OrderByDescending(m=>m.Created).First().Created)
                 .Include(mg => mg.Messages.OrderByDescending(m => m.Created).Take(1))
                 .ThenInclude(m => m.User)
@@ -62,7 +64,6 @@ namespace ChatParty.Controllers
                     );
                 }
             }
-            var currentUserId = _userManager.GetUserId(User);
 
             var userMessages = await _context.Message
                 .Where(m => m.FromId == currentUserId)
