@@ -86,7 +86,7 @@ namespace ChatParty.Controllers
             return BadRequest();
         }
 
-        public async Task<IActionResult> Leave(string channelId)
+        public async Task<IActionResult> Leave(string? channelId)
         {
             if (channelId == null || _context.Channel == null)
             {
