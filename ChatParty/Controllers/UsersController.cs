@@ -83,7 +83,7 @@ namespace ChatParty.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([Bind("UserName,Password")] User user)
+        public IActionResult Login([Bind("UserName,Password")] User user)
         {
             if (string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.PasswordHash))
             {

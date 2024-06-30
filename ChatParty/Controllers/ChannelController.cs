@@ -36,7 +36,7 @@ namespace ChatParty.Controllers
             return View(messageGroup);
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }
