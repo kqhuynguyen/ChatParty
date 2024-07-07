@@ -11,10 +11,10 @@ namespace ChatParty.Hubs
     [AllowAnonymous]
     public class ChatHub : Hub
     {
-        private readonly ChatPartyAuthContext _authContext;
+        private readonly ChatPartyContext _authContext;
         private readonly UserManager<User> _userManager;
 
-        public ChatHub(ChatPartyAuthContext authContext, UserManager<User> userManager)
+        public ChatHub(ChatPartyContext authContext, UserManager<User> userManager)
         {
             _authContext = authContext;
             _userManager = userManager;

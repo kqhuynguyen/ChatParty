@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<ChatPartyAuthContext>(options =>
+builder.Services.AddDbContext<ChatPartyContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("ChatPartyAuthContext") ?? throw new InvalidOperationException("Connection string 'ChatPartyContext' not found.")
+        builder.Configuration.GetConnectionString("ChatPartyContext") ?? throw new InvalidOperationException("Connection string 'ChatPartyContext' not found.")
         ));
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ChatPartyAuthContext>();
+    .AddEntityFrameworkStores<ChatPartyContext>();
 
 builder.Services.AddSignalR();
 

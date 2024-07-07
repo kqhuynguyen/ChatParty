@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChatParty.Areas.Identity.Data;
 
-public class ChatPartyAuthContext : IdentityDbContext<User>
+public class ChatPartyContext : IdentityDbContext<User>
 {
     #region Required
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,7 +28,7 @@ public class ChatPartyAuthContext : IdentityDbContext<User>
         
     }
     #endregion
-    public ChatPartyAuthContext(DbContextOptions<ChatPartyAuthContext> options)
+    public ChatPartyContext(DbContextOptions<ChatPartyContext> options)
 		: base(options)
 	{
 	}

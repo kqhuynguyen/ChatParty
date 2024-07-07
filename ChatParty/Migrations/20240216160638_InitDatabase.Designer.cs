@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ChatParty.Migrations
 {
-    [DbContext(typeof(ChatPartyAuthContext))]
+    [DbContext(typeof(ChatPartyContext))]
     [Migration("20240216160638_InitDatabase")]
     partial class InitDatabase
     {

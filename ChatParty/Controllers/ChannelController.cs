@@ -9,10 +9,10 @@ namespace ChatParty.Controllers
 {
     public class ChannelController : Controller
     {
-        private readonly ChatPartyAuthContext _context;
+        private readonly ChatPartyContext _context;
         private readonly UserManager<User> _userManager;
 
-        public ChannelController(ChatPartyAuthContext context, UserManager<User> userManager)
+        public ChannelController(ChatPartyContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -34,6 +34,19 @@ namespace ChatParty.Controllers
                 return NotFound();
             }
             return View(messageGroup);
+        }
+
+        public IActionResult OnPostAutoComplete(string prefix)
+        {
+            var users = (from user in this._context.User
+                             where user.UserName.StartsWith(prefix)
+                             select new
+                             {
+                                 username = user.UserName,
+                                 id = user.Id
+                             }).ToList();
+
+            return new JsonResult(users);
         }
 
         public IActionResult Create()

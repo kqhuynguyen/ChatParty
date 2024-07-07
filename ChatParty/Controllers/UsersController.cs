@@ -10,11 +10,11 @@ namespace ChatParty.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly ChatPartyAuthContext _context;
+        private readonly ChatPartyContext _context;
         private readonly UserManager<User> _userManager;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
-        public UsersController(ChatPartyAuthContext context, UserManager<User> userManager)
+        public UsersController(ChatPartyContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;

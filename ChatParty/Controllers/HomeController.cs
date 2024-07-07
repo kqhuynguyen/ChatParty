@@ -13,12 +13,12 @@ namespace ChatParty.Controllers
  
     public class HomeController : Controller
     {
-        private readonly ChatPartyAuthContext _context;
+        private readonly ChatPartyContext _context;
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<User> _userManager;
 
 
-        public HomeController(ChatPartyAuthContext context, ILogger<HomeController> logger, UserManager<User> userManager)
+        public HomeController(ChatPartyContext context, ILogger<HomeController> logger, UserManager<User> userManager)
         {
             _context = context;
             _logger = logger;

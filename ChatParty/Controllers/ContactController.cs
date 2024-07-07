@@ -7,9 +7,9 @@ namespace ChatParty.Controllers
 {
     public class ContactController : Controller
     {
-        private readonly ChatPartyAuthContext _context;
+        private readonly ChatPartyContext _context;
 
-        public ContactController(ChatPartyAuthContext context)
+        public ContactController(ChatPartyContext context)
         {
             _context = context;
         }

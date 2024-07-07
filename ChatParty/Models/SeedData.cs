@@ -7,39 +7,35 @@ namespace ChatParty.Models;
 
 public static class SeedData
 {
+   
     private static readonly PasswordHasher<User> hasher = new PasswordHasher<User>();
 
     public async static Task Initialize(IServiceProvider serviceProvider)
     {
-        using (var context = new ChatPartyAuthContext(
+        using (var context = new ChatPartyContext(
             serviceProvider.GetRequiredService<
-                DbContextOptions<ChatPartyAuthContext>>()))
+                DbContextOptions<ChatPartyContext>>()))
         {
-
-
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-            // Look for any movies.
+
             if (context.User.Any() || context.User.Any() || context.Channel.Any())
             {
-                return;   // DB has been seeded
+                return;  
             }
-
-            var exampleUserId1 = Guid.NewGuid().ToString();
-            var exampleUserId2 = Guid.NewGuid().ToString();
 
             var result = await userManager.CreateAsync(new User
             {
-                Id = exampleUserId1,
+                Id = Guid.NewGuid().ToString(),
                 UserName = "JacksonSteward",
                 Email = "jackson@gmail.com",
                 CreatedDate = DateTime.Parse("2023-1-1"),
                 EmailConfirmed = true,
                 BirthDate = DateTime.Parse("1960-1-1"),
                 Status = 1
-            }, "abc123456890");
+            }, "abc123abc");
             await userManager.CreateAsync(new User
             {
-                Id = exampleUserId2,
+                Id = Guid.NewGuid().ToString(),
                 UserName = "YukinoSpielberg",
                 Email = "yukino@gmail.com",
                 CreatedDate = DateTime.Parse("2023-9-12"),
@@ -57,39 +53,12 @@ public static class SeedData
                 BirthDate = DateTime.Parse("2005-12-16"),
                 Status = 0
             }, "abc123456890");
-            await userManager.CreateAsync(new User
-            {
-                Id = Guid.NewGuid().ToString(),
-                UserName = "EricTurk",
-                Email = "eric@gmail.com",
-                CreatedDate = DateTime.Parse("2001-5-8"),
-                EmailConfirmed = true,
-                BirthDate = DateTime.Parse("1998-9-23"),
-                Status = 1
-            }, "abc123456890");
 
             context.Channel.AddRange(
                 new Channel
                 {
                     Id = Constants.PublicMessageGroupId,
                     Name = "Public Group",
-                }
-            );
-
-            context.GroupMessage.AddRange(
-                new GroupMessage
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    UserId = exampleUserId1,
-                    ChannelId = Constants.PublicMessageGroupId,
-                    Content = "Hello friends. Jackson's here. How are you today?",
-                },
-                new GroupMessage
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    UserId = exampleUserId2,
-                    ChannelId = Constants.PublicMessageGroupId,
-                    Content = "Hi Jackson. I'm doing ok.",
                 }
             );
 
