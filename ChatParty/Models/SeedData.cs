@@ -23,7 +23,7 @@ public static class SeedData
                 return;  
             }
 
-            var result = await userManager.CreateAsync(new User
+            await userManager.CreateAsync(new User
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = "JacksonSteward",
@@ -32,7 +32,7 @@ public static class SeedData
                 EmailConfirmed = true,
                 BirthDate = DateTime.Parse("1960-1-1"),
                 Status = 1
-            }, "abc123abc");
+            }, "abc123456890");
             await userManager.CreateAsync(new User
             {
                 Id = Guid.NewGuid().ToString(),

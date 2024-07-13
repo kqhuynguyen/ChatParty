@@ -1,5 +1,4 @@
 ﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
@@ -7,31 +6,7 @@
 
 <div>
     <input id="autoComplete" type="search" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" maxlength="2048" tabindex="1">
-    <div id="selected-users" class="visually-hidden"></div>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css">
+    <div id="selected-users"></div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
 <script type="text/javascript">
-    const autoCompleteJS = new autoComplete({
-        selector: "#autoComplete",
-        placeHolder: "Search for Food...",
-        data: {
-            src: ["Sauce - Thousand Island", "Wild Boar - Tenderloin", "Goat - Whole Cut"],
-            cache: true,
-        },
-        resultsList: {
-            element: (list, data) => {
-                if (!data.results.length) {
-                    const message = document.createElement("div");
-                    message.setAttribute("class", "no_result");
-                    message.innerHTML = `<span>Found No Results for "${data.query}"</span>`;
-                    list.prepend(message);
-                }
-            },
-            noResults: true,
-        },
-        resultItem: {
-            highlight: true,
-        }
-    });
 </script>

@@ -36,19 +36,6 @@ namespace ChatParty.Controllers
             return View(messageGroup);
         }
 
-        public IActionResult OnPostAutoComplete(string prefix)
-        {
-            var users = (from user in this._context.User
-                             where user.UserName.StartsWith(prefix)
-                             select new
-                             {
-                                 username = user.UserName,
-                                 id = user.Id
-                             }).ToList();
-
-            return new JsonResult(users);
-        }
-
         public IActionResult Create()
         {
             return View();
